@@ -1,0 +1,33 @@
+# Streamlit theme for the femicide project
+# Look: white pages, black text, muted gold accents, light-weight headings.
+# Restart the app (Ctrl+C, then `streamlit run app.py`) after changing anything here.
+
+[theme]
+base = "light"
+
+# --- Colors ---------------------------------------------------------------
+primaryColor             = "#e7b70d"   # dark gold: buttons, sliders, selected items (white text passes contrast)
+backgroundColor          = "#ffffff"   # page background
+secondaryBackgroundColor = "#f7f7f7"   # boxes, inputs, expanders
+textColor                = "#1b1b1b"   # near-black body text
+linkColor                = "#917204"   # gold links
+linkUnderline            = false
+borderColor              = "#e2e2e2"   # thin light-gray borders
+showWidgetBorder         = true
+
+# --- Fonts (loaded from Google Fonts; falls back to the system sans-serif) ---
+font        = "Cantarell:https://fonts.googleapis.com/css2?family=Cantarell:wght@400;700&display=swap, sans-serif"
+headingFont = "Work Sans:https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600&display=swap, sans-serif"
+headingFontWeights = [500, 500, 500, 500, 500, 500]   # medium-weight headings instead of bold
+baseFontSize = 16
+
+# --- Shape ------------------------------------------------------------------
+baseRadius   = "0.25rem"   # nearly square corners
+buttonRadius = "0.25rem"
+
+# --- Chart colors (apply to Plotly, Altair and Streamlit's own charts) -------
+# Categorical: gold first, then hues checked for color-blind separation
+chartCategoricalColors = ["#a6830a", "#2a78d6", "#b8336a", "#1baf7a", "#6250d6"]
+# Sequential: exactly ten steps, light gold -> dark gold (maps, heatmaps)
+chartSequentialColors = ["#fbf3d9", "#f6e6b0", "#f0d785", "#e9c75a", "#e0b52f",
+                         "#c99d12", "#a6830a", "#84680a", "#634e08", "#443606"]

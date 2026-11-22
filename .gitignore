@@ -1,0 +1,32 @@
+# ---- Credentials: never upload these -------------------------------------
+.streamlit/secrets.toml
+*.key
+*service-account*.json
+*credentials*.json
+.env
+
+# ---- Python / Jupyter clutter ---------------------------------------------
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# ---- Large or generated data files ----------------------------------------
+# (the data lives in BigQuery; keep downloads and exports out of the repo)
+*.parquet
+*.zip
+*.gz
+census_output/
+population_output/
+*.csv
+
+# ---- Personal editor settings ---------------------------------------------
+# settings.json holds your own Python path (C:\Users\laura\...), which won't
+# work on teammates' computers. launch.json is shared on purpose.
+.vscode/settings.json
+
+# ---- Operating-system files -----------------------------------------------
+Thumbs.db
+desktop.ini
+.DS_Store
