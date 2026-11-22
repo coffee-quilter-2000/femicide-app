@@ -6,7 +6,7 @@
 base = "light"
 
 # --- Colors ---------------------------------------------------------------
-primaryColor             = "#e7b70d"   # dark gold: buttons, sliders, selected items (white text passes contrast)
+primaryColor             = "#e7b70d"   # bright gold (Women Count USA top ribbon): top nav ribbon, buttons, sliders, selected items
 backgroundColor          = "#ffffff"   # page background
 secondaryBackgroundColor = "#f7f7f7"   # boxes, inputs, expanders
 textColor                = "#1b1b1b"   # near-black body text

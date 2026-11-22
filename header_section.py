@@ -5,7 +5,7 @@ import base64
 
 TITLE = "Femicide in the United States"
 SUBTITLE = "Homicides of women and girls, 1976–2024, alongside poverty, health insurance and education"
-BANNER_HEIGHT = 340          # px
+BANNER_HEIGHT = 200          # px
 NAV_LINKS = [                # (label, link to a section heading further down the page)
     ("What is femicide?", "#what-is-femicide"),
     ("Map", "#femicide-across-the-us"),

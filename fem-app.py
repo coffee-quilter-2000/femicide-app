@@ -1,151 +1,145 @@
 """
-Femicide in the United States: Streamlit app (layout with placeholders)
+Femicide in the United States: main app
 
-Run from the project folder:
-    streamlit run app.py
+OWNER: project lead. This file only arranges the page. Each part of the page lives in its own file:
 
-Layout
-    1. Title
-    2. Banner image across the top of the page      -> assets/banner.jpg
-    3. Short description of femicide
-    4. Two columns
-         left  (2/3): interactive US map (HTML page)  -> maps/us_map.html
-         right (1/3): socio-economic trend lines      -> to be built
-    5. Sources and notes
+    sections/map_section.py        Person 1  interactive US map (left column)
+    sections/trends_section.py     Person 2  socio-economic trend charts (right column, "Trends")
+    sections/profiles_section.py   Person 3  victim icons and profiles (right column, "Victims")
+    sections/detail_section.py     Person 4  detailed trends with demographic filters (bottom)
+    content/  and  assets/         Person 5  all written text and images
+
+Run from the project folder:   streamlit run app.py
 """
 
-
-from pathlib import Path
-import plotly.express as px
-import streamlit as st
-import streamlit.components.v1 as components
-
-# ---------------------------------------------------------------------------
-# Settings: change these as the real pieces arrive
-# ---------------------------------------------------------------------------
-
-import theme
-theme.apply_css()
-
-# custom HTML uses the CSS variables
-#   .top-nav { background: var(--nav-bg); }
-#   .subtitle-ribbon { background: var(--surface); color: var(--text); }
-
-APP_DIR: Path = Path(__file__).parent
-BANNER_IMAGE = APP_DIR / "assets" / "banner.jpg"    # photo collage spanning the page
-MAP_HTML = APP_DIR / "maps" / "us_map.html"          # teammate's interactive map page
-MAP_HEIGHT = 500                                     # pixels; match the map page's height
-
-TREND_CHARTS = [
-    "Femicide rate (per 100k women)",
-    "Poverty rate",
-    "Uninsured rate",
-    "Education (bachelor's degree or higher)",
-]
-
-# ---------------------------------------------------------------------------
-# Page setup
-# ---------------------------------------------------------------------------
-st.set_page_config(
-    page_title="Femicide in the United States",
-    page_icon="📊",
-    layout="wide",                  # use the full browser width
-)
-
-# Slightly tighter spacing at the top of the page
-st.markdown(
-    """
-    <style>
-      .block-container { padding-top: 2rem; padding-bottom: 2rem; }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-def placeholder(label: str, note: str, height: int) -> None:
-    """A bordered, fixed-height box that marks where a real element will go."""
-    with st.container(border=True, height=height):
-        st.markdown(f"**{label}**")
-        st.caption(note)
-
-
-# ---------------------------------------------------------------------------
-# 1–2. Top nav ribbon, full-width banner with the title, subtitle ribbon
-# ---------------------------------------------------------------------------
 import base64
+import importlib
+import tomllib
+from pathlib import Path
 
-TITLE = "Femicide in the United States"
-SUBTITLE = "Homicides of women and girls, 1976–2024, alongside poverty, health insurance and education"
-BANNER_HEIGHT = 200          # px
-NAV_LINKS = [                # (label, link to a section heading further down the page)
+import streamlit as st
+
+st.set_page_config(page_title="Femicide in the United States", page_icon="📊", layout="wide")
+
+import data   # noqa: E402  (imports after set_page_config on purpose)
+import theme  # noqa: E402
+
+APP_DIR = Path(__file__).parent
+CONTENT = APP_DIR / "content"
+BANNER_IMAGE = APP_DIR / "assets" / "banner.jpg"
+MAP_HEIGHT = 650          # px; the map and the right column are this tall
+BANNER_HEIGHT = 200       # px
+NAV_HEIGHT = 40           # px; matches Streamlit's own top bar so its buttons sit inside the ribbon
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+def read_text(name: str, default: str = "") -> str:
+    """Text from content/<name>, or a default if the file is missing."""
+    path = CONTENT / name
+    return path.read_text(encoding="utf-8").strip() if path.exists() else default
+
+
+def read_header() -> dict:
+    path = CONTENT / "header.toml"
+    try:
+        return tomllib.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    except tomllib.TOMLDecodeError as e:
+        st.error(f"content/header.toml has a formatting error, so default text is shown: {e}")
+        return {}
+
+
+def safe_render(section: str, name: str, **kwargs) -> None:
+    """Load sections/<section>.py and run its render(). If the file has any error (even a typo
+    that stops it from loading), show a message in its place instead of stopping the whole app,
+    so one person's mistake can't break anyone else's section."""
+    try:
+        module = importlib.import_module(f"sections.{section}")
+        module.render(**kwargs)
+    except Exception as e:
+        st.error(f"The **{name}** section has an error and is hidden for now. "
+                 "The rest of the app still works.")
+        with st.expander("Error details (for the section owner)"):
+            st.exception(e)
+
+
+# ---------------------------------------------------------------------------
+# 1. Top ribbon, banner with title, subtitle ribbon
+# ---------------------------------------------------------------------------
+header = read_header()
+TITLE = header.get("title", "Femicide in the United States")
+SUBTITLE = header.get("subtitle", "")
+BANNER_ALT = header.get("banner_alt", "A collage of photographs of women and girls killed in the United States")
+NAV_LINKS = [            # (label, link to a section heading further down the page)
     ("What is femicide?", "#what-is-femicide"),
     ("Map", "#femicide-across-the-us"),
     ("Trends", "#socio-economic-trends"),
+    ("Details", "#a-closer-look"),
 ]
 
-# Banner background: the photo collage if it exists, otherwise a dark placeholder
 if BANNER_IMAGE.exists():
     img_b64 = base64.b64encode(BANNER_IMAGE.read_bytes()).decode()
-    mime = "image/png" if BANNER_IMAGE.suffix.lower() == ".png" else "image/jpeg"
-    banner_bg = f"url('data:{mime};base64,{img_b64}') center / cover no-repeat"
+    banner_bg = f"url('data:image/jpeg;base64,{img_b64}') center / cover no-repeat"
     banner_note = ""
 else:
     banner_bg = "linear-gradient(120deg, #3a3a3a, #1f1f1f)"
-    banner_note = (f'<div class="hero-note">Banner placeholder: save the photo collage as '
-                   f'{BANNER_IMAGE.relative_to(APP_DIR).as_posix()}</div>')
+    banner_note = '<div class="hero-note">Banner placeholder: save the photo collage as assets/banner.jpg</div>'
 
 nav_html = "".join(f'<a href="{href}" target="_self">{label}</a>' for label, href in NAV_LINKS)
 
 st.markdown(
     f"""
     <style>
-      /* Hide Streamlit's own top bar so the black ribbon is the top of the page */
-      header[data-testid="stHeader"] {{ display: none; }}
+      {theme.css_variables()}
+
+      /* Streamlit's own top bar (Rerun menu, Deploy) stays, but see-through, so its
+         buttons sit on our ribbon. Clicks pass through it except on its buttons. */
+      header[data-testid="stHeader"] {{ background: transparent; }}
+      header[data-testid="stHeader"], header[data-testid="stHeader"] * {{ pointer-events: none; }}
+      header[data-testid="stHeader"] button,
+      header[data-testid="stHeader"] a,
+      header[data-testid="stHeader"] [data-testid="stStatusWidget"] {{ pointer-events: auto; }}
+      [data-testid="stDecoration"] {{ display: none; }}
       .block-container {{ padding-top: 0 !important; }}
       [data-testid="stMain"] {{ overflow-x: hidden; }}
       /* Style-only st.markdown blocks still take up a slot (and a gap) in the page; remove them */
       [data-testid="stElementContainer"]:has(style):not(:has(.full-bleed)) {{ display: none; }}
 
-      /* Full-width pieces: break out of Streamlit's centered content column */
-      .full-bleed {{ width: 100vw; position: relative; left: 50%; margin-left: -50vw; }}
-
+      .full-bleed {{ width: 100vw; position: relative; left: 50%; margin-left: -50vw;
+                     padding-top: {NAV_HEIGHT}px; }}
       .top-nav {{
-        background: st.get_option("theme.primaryColor"); height: 44px; display: flex; align-items: center;
-        gap: 28px; padding: 0 32px; font-size: 14px;
+        position: fixed; top: 0; left: 0; right: 0; z-index: 999989;
+        background: var(--primary); height: {NAV_HEIGHT}px; display: flex; align-items: center;
+        gap: 28px; padding: 0 200px 0 32px; font-size: 14px;
       }}
-      .top-nav .brand {{ color: #fff; font-weight: 700; margin-right: auto; letter-spacing: .02em; }}
-      .top-nav a {{ color: #d6d6d6 !important; text-decoration: none; }}
-      .top-nav a:hover {{ color: #fff !important; text-decoration: underline; }}
+      .top-nav .brand {{ color: var(--text); font-weight: 700; margin-right: auto; letter-spacing: .02em; }}
+      .top-nav a {{ color: var(--text) !important; text-decoration: none; }}
+      .top-nav a:hover {{ text-decoration: underline; }}
 
-      .hero {{
-        height: {BANNER_HEIGHT}px; background: {banner_bg};
-        display: flex; align-items: center; justify-content: center; position: relative;
-      }}
-      .hero::before {{                 /* darkens the photos so the title stays readable */
-        content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45);
-      }}
-      .hero-title {{
-        position: relative; color: #fff; text-align: center; margin: 0; padding: 0 24px;
-        font-size: clamp(2rem, 5vw, 3.75rem); font-weight: 800; line-height: 1.1;
-        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
-      }}
-      .hero-note {{
-        position: absolute; bottom: 12px; width: 100%; text-align: center;
-        color: #bdbdbd; font-size: 13px;
-      }}
+      .hero {{ height: {BANNER_HEIGHT}px; background: {banner_bg}; position: relative;
+               display: flex; align-items: center; justify-content: center; }}
+      .hero::before {{ content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); }}
+      .hero-title {{ position: relative; color: #fff; text-align: center; margin: 0; padding: 0 24px;
+                     font-size: clamp(2rem, 5vw, 3.75rem); font-weight: 800; line-height: 1.1;
+                     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.6); }}
+      .hero-note {{ position: absolute; bottom: 12px; width: 100%; text-align: center;
+                    color: #bdbdbd; font-size: 13px; }}
+      .subtitle-ribbon {{ background: var(--surface); border-bottom: 1px solid var(--border);
+                          padding: 10px 24px; text-align: center; color: var(--text); font-size: 15px;
+                          margin-bottom: 1.5rem; }}
 
-      .subtitle-ribbon {{
-        background: #f2f2f2; border-bottom: 1px solid #e0e0e0;
-        padding: 10px 24px; text-align: center; color: #333; font-size: 15px;
-        margin-bottom: 1.5rem;
-      }}
+      /* Selected Trends / Victims button: solid gold with dark text */
+      [data-testid="stButtonGroup"] button[aria-checked="true"] {{
+        background: var(--primary) !important; color: var(--text) !important; font-weight: 700; }}
+      /* Chips in multiselect boxes: dark text on the gold (white text is hard to read) */
+      [data-baseweb="tag"], [data-baseweb="tag"] span {{ color: var(--text) !important; }}
+      [data-baseweb="tag"] svg {{ fill: var(--text) !important; }}
     </style>
 
     <div class="full-bleed">
       <nav class="top-nav"><span class="brand">{TITLE}</span>{nav_html}</nav>
-      <div class="hero" role="img"
-           aria-label="A collage of photographs of women and girls killed in the United States">
+      <div class="hero" role="img" aria-label="{BANNER_ALT}">
         <div class="hero-title" role="heading" aria-level="1">{TITLE}</div>
         {banner_note}
       </div>
@@ -155,64 +149,49 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+warning = read_text("content_warning.md")
+if warning:
+    st.info(warning, icon=":material/info:")
+
 # ---------------------------------------------------------------------------
-# 3. What is femicide?
+# 2. What is femicide?  (text from content/intro.md)
 # ---------------------------------------------------------------------------
 st.subheader("What is femicide?")
-st.markdown(
-    """
-    *Placeholder text: edit to match the group's definition.*
-
-    **Femicide** is the killing of women and girls, most often because they are women.
-    The World Health Organization describes it as the intentional killing of women, and notes
-    that a large share of these killings are committed by a current or former intimate partner.
-    The United States has no official femicide count, so this project builds one from the FBI's
-    Supplementary Homicide Reports and looks at how it moves alongside poverty, health insurance
-    coverage and education.
-    """
-)
-
+st.markdown(read_text("intro.md", "*Intro text goes in content/intro.md*"))
 st.divider()
 
 # ---------------------------------------------------------------------------
-# 4. Two columns: map (2/3) and trend lines (1/3)
+# 3. Map (2/3) and right column (1/3)
 # ---------------------------------------------------------------------------
 left, right = st.columns([2, 1], gap="large")
 
+# Controls first, so the map also knows the selected state
+with right:
+    state = st.selectbox("Select State:", data.STATES, index=data.STATES.index(data.DEFAULT_STATE), key="state")
+    view = st.segmented_control("View", ["Trends", "Victims"], default="Trends", key="view",
+                                label_visibility="collapsed") or "Trends"
+
 with left:
     st.subheader("Femicide across the US")
-    if MAP_HTML.exists():
-        components.html(MAP_HTML.read_text(encoding="utf-8"), height=MAP_HEIGHT, scrolling=False)
-    else:
-        placeholder(
-            "Interactive US map",
-            f"The map page goes here. Save the HTML file as `{MAP_HTML.relative_to(APP_DIR)}` "
-            "(or point `MAP_HTML` at its location) and it will load automatically.",
-            height=MAP_HEIGHT,
-        )
+    safe_render("map_section", "map", state=state, height=MAP_HEIGHT)
 
 with right:
-    st.subheader("Socio-economic trends")
-    st.selectbox("State", ["United States"], disabled=True,
-                 help="Placeholder: will let readers pick a state")
-    chart_height = (MAP_HEIGHT - 60) // len(TREND_CHARTS)
-    for name in TREND_CHARTS:
-        placeholder(name, "Trend line chart goes here.", height=chart_height)
+    if view == "Trends":
+        safe_render("trends_section", "trends", state=state, height=MAP_HEIGHT - 130)
+    else:
+        safe_render("profiles_section", "victim profiles", state=state)
 
 st.divider()
 
 # ---------------------------------------------------------------------------
-# 5. Sources and notes
+# 4. A closer look: detailed trends with demographic filters
+# ---------------------------------------------------------------------------
+st.subheader("A closer look")
+safe_render("detail_section", "detailed trends", state=state)
+st.divider()
+
+# ---------------------------------------------------------------------------
+# 5. Sources and notes  (text from content/sources.md)
 # ---------------------------------------------------------------------------
 with st.expander("Data sources and notes"):
-    st.markdown(
-        """
-        - **Femicide counts:** FBI Supplementary Homicide Reports, 1976–2024
-          (Jacob Kaplan's concatenated files, openICPSR).
-        - **Population:** SEER U.S. population estimates (National Cancer Institute),
-          based on U.S. Census Bureau estimates.
-        - **Poverty, health insurance, education:** U.S. Census Bureau (SAIPE, SAHIE, American Community Survey).
-        - **Reporting gaps:** police agencies report to the SHR voluntarily. Florida sends almost no
-          reports, and 2021–2022 are incomplete because of the FBI's switch to a new reporting system.
-        """
-    )
+    st.markdown(read_text("sources.md", "*Sources go in content/sources.md*"))

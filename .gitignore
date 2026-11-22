@@ -12,8 +12,7 @@ __pycache__/
 .venv/
 venv/
 
-# ---- Large or generated data files ----------------------------------------
-# (the data lives in BigQuery; keep downloads and exports out of the repo)
+# ---- Large or generated data files (the data lives in BigQuery) ----------
 *.parquet
 *.zip
 *.gz
@@ -21,9 +20,7 @@ census_output/
 population_output/
 *.csv
 
-# ---- Personal editor settings ---------------------------------------------
-# settings.json holds your own Python path (C:\Users\laura\...), which won't
-# work on teammates' computers. launch.json is shared on purpose.
+# ---- Personal editor settings (your own Python path) ----------------------
 .vscode/settings.json
 
 # ---- Operating-system files -----------------------------------------------

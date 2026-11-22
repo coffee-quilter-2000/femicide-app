@@ -1,0 +1,5 @@
+- **Femicide counts:** FBI Supplementary Homicide Reports, 1976–2024 (Jacob Kaplan's concatenated files, openICPSR).
+- **Population:** SEER U.S. population estimates (National Cancer Institute), based on U.S. Census Bureau estimates.
+- **Poverty, health insurance, education:** U.S. Census Bureau (SAIPE, SAHIE, American Community Survey).
+- **Reporting gaps:** police agencies report to the SHR voluntarily. Florida sends almost no reports, and 2021–2022 are incomplete because of the FBI's switch to a new reporting system.
+- **Photographs:** credit each photo's source here.

@@ -1,0 +1,1 @@
+**Content note:** this site discusses violence against women and girls, including domestic violence and homicide, and shows photographs of victims. If you need support, the National Domestic Violence Hotline is available 24/7 at 1-800-799-7233 or by texting START to 88788.

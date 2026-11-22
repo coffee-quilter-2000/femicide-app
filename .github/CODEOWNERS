@@ -1,0 +1,13 @@
+# Who reviews changes to which files. Replace each @username with the person's GitHub username.
+# GitHub asks these people to review any pull request that touches their files.
+
+# Default: the project lead owns everything not listed below
+*                                 @project-lead-username
+
+/sections/map_section.py          @person1-username @project-lead-username
+/maps/                            @person1-username @project-lead-username
+/sections/trends_section.py       @person2-username @project-lead-username
+/sections/profiles_section.py     @person3-username @project-lead-username
+/sections/detail_section.py       @person4-username @project-lead-username
+/content/                         @person5-username @project-lead-username
+/assets/                          @person5-username @project-lead-username

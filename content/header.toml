@@ -1,0 +1,9 @@
+# Text shown at the top of the app.
+# OWNER: Person 5 · branch: content
+# Keep each value inside "double quotes". To use a quote mark inside the text, write \"
+
+title = "Femicide in the United States"
+subtitle = "Homicides of women and girls, 1976–2024, alongside poverty, health insurance and education"
+
+# Read aloud by screen readers in place of the banner image: describe the photo collage
+banner_alt = "A collage of photographs of women and girls killed in the United States"
