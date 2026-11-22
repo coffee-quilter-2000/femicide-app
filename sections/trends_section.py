@@ -18,7 +18,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # finds theme.py 
 import streamlit as st  # noqa: E402
 
 import data  # noqa: E402
-import old-themes  # noqa: E402
+import theme  # noqa: E402
 # ===============================================================================
 
 CHARTS = [
@@ -34,7 +34,7 @@ def render(state: str, height: int = 520) -> None:
     available for all charts together, in pixels."""
     chart_height = height // len(CHARTS)
     for name in CHARTS:
-        old-themes.placeholder(f"{name}: {state}", "Trend line chart goes here.", height=chart_height)
+        theme.placeholder(f"{name}: {state}", "Trend line chart goes here.", height=chart_height)
 
     # ---- Example of a real chart (delete the placeholders above when you use this) ----
     # import plotly.express as px

@@ -19,7 +19,7 @@ import streamlit as st  # noqa: E402
 import streamlit.components.v1 as components  # noqa: E402
 
 import data  # noqa: E402
-import old-themes  # noqa: E402
+import theme  # noqa: E402
 # ===============================================================================
 
 MAP_FILE = Path(__file__).resolve().parents[1] / "maps" / "us_map.html"
@@ -29,7 +29,7 @@ def render(state: str, height: int = 650) -> None:
     """Draw the map. `state` is the state chosen in the dropdown (e.g. "Washington"),
     in case the map should highlight it. `height` is the space available, in pixels."""
     if not MAP_FILE.exists():
-        old-themes.placeholder(
+        theme.placeholder(
             "Interactive US map",
             "Save the map page as maps/us_map.html and it will appear here.",
             height=height,

@@ -19,7 +19,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # finds theme.py 
 import streamlit as st  # noqa: E402
 
 import data  # noqa: E402
-import old-themes  # noqa: E402
+import theme  # noqa: E402
 # ===============================================================================
 
 AGE_GROUPS = ["Under 18", "18–24", "25–34", "35–49", "50–64", "65+", "Unknown"]
@@ -45,9 +45,9 @@ def render(state: str) -> None:
     # ---- Charts -------------------------------------------------------------------
     left, right = st.columns(2, gap="large")
     with left:
-        old-themes.placeholder("Femicide by age group over time", "Chart goes here.", height=320)
+        theme.placeholder("Femicide by age group over time", "Chart goes here.", height=320)
     with right:
-        old-themes.placeholder("Femicide by relationship to the killer", "Chart goes here.", height=320)
+        theme.placeholder("Femicide by relationship to the killer", "Chart goes here.", height=320)
 
 
 # ===== Test view: runs only with `streamlit run sections/detail_section.py` ========
