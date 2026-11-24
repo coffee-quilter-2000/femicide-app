@@ -34,6 +34,11 @@ SEQUENTIAL = _opt("chartSequentialColors", None)
 
 # ---- Extras with no config.toml setting ------------------------------------
 MUTED = "#5e5e5e"            # secondary text
+US_LINE = "#8f8f8f"          # national-average comparison line
+WORSE_FILL = "rgba(224, 96, 90, 0.28)"     # light red: state worse than the US average
+BETTER_FILL = "rgba(27, 175, 122, 0.28)"   # light green: state better than the US average
+WORSE_TEXT = "#c0392b"       # red text for "worse" differences
+BETTER_TEXT = "#0b7a52"      # green text for "better" differences
 NO_DATA = "#b8b8b8"          # gray icons / states without data
 FONT = "Cantarell, Arial, sans-serif"
 HEADING_FONT = "'Work Sans', Arial, sans-serif"
