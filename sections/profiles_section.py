@@ -24,7 +24,7 @@ import streamlit as st  # noqa: E402
 import streamlit.components.v1 as components  # noqa: E402
 
 import data  # noqa: E402
-import old-themes  # noqa: E402
+import theme  # noqa: E402
 # ===============================================================================
 
 ICONS_PER_ROW = 16
@@ -74,10 +74,10 @@ def render(state: str) -> None:
 
 
 def _icon_grid_html(victims: list[dict]) -> str:
-    on, off = old-themes.LINK, old-themes.NO_DATA
+    on, off = theme.LINK, theme.NO_DATA
     return f"""
 <!doctype html><html><head><meta charset="utf-8"><style>
-  body {{ margin: 0; font-family: {old-themes.FONT}; color: {old-themes.TEXT}; }}
+  body {{ margin: 0; font-family: {theme.FONT}; color: {theme.TEXT}; }}
   .legend {{ font-size: 12px; margin: 2px 0 8px; display: flex; gap: 14px; align-items: center; }}
   .legend svg {{ width: 9px; height: 18px; vertical-align: -4px; margin-right: 4px; }}
   .grid {{ display: grid; grid-template-columns: repeat({ICONS_PER_ROW}, 1fr); gap: 4px 2px; }}
@@ -87,11 +87,11 @@ def _icon_grid_html(victims: list[dict]) -> str:
   .icon.on:hover svg, .icon.on:focus-visible svg {{ transform: scale(1.25); }}
   .icon.on.active svg {{ outline: 2px solid {on}; outline-offset: 2px; }}
   .icon.off {{ color: {off}; cursor: default; }}
-  .card {{ margin-top: 12px; padding: 12px 14px; background: {old-themes.SURFACE}; border-radius: 4px;
+  .card {{ margin-top: 12px; padding: 12px 14px; background: {theme.SURFACE}; border-radius: 4px;
            font-size: 14px; line-height: 1.45; min-height: 120px; }}
   .card h4 {{ margin: 0 0 4px; font-size: 16px; }}
-  .card .meta {{ color: {old-themes.MUTED}; font-size: 13px; margin-bottom: 6px; }}
-  .card .hint {{ color: {old-themes.MUTED}; }}
+  .card .meta {{ color: {theme.MUTED}; font-size: 13px; margin-bottom: 6px; }}
+  .card .hint {{ color: {theme.MUTED}; }}
   .photo {{ float: left; width: 64px; height: 80px; margin: 0 12px 4px 0; background: #e2e2e2;
             display: flex; align-items: center; justify-content: center; font-size: 11px; color: #777; }}
 </style></head><body>

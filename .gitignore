@@ -19,6 +19,8 @@ venv/
 census_output/
 population_output/
 *.csv
+# ...except the small app data files in data/, which the app reads
+!data/*.csv
 
 # ---- Personal editor settings (your own Python path) ----------------------
 .vscode/settings.json

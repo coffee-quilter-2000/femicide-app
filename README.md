@@ -43,6 +43,16 @@ If a section has an error, the app shows an error box **in that section only**; 
    ```
 3. For real data: copy `.streamlit/secrets.toml.example` to `.streamlit/secrets.toml` and fill in the values the project lead sends you privately. Without it the app still runs with placeholder data.
 
+## The data files
+
+The app reads small data files from `data/` so teammates don't need BigQuery access to run it.
+
+| File | Used by | How to make it |
+|---|---|---|
+| `data/state_trends.csv` | Trends section | `python scripts/export_state_trends.py` (query in `scripts/state_trends.sql`) |
+
+To refresh a file after the BigQuery tables change, the project lead re-runs its script, then commits and pushes the new CSV.
+
 ## Your routine
 
 1. In GitHub Desktop: switch to **your branch** (Current branch menu).
